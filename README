@@ -1,0 +1,59 @@
+Proof-of-Concept DB
+===================
+
+Proof-of-concept db is the answer to a question:  How long would it take to
+build the basics of a Paxos-replicated database for fast prototyping purposes?
+
+The answer is somewhere less than 3 hours because I'm not done the three hour
+concert set I put on when I started, and this README has consumed about five
+minutes of my time.  I did reuse some of my own code from elsewhere, but not
+the core of the Paxos implementation (mainly messaging scaffolding and the
+like).
+
+How to test it
+--------------
+
+pocdb is a static, 5-node paxos cluster hard-coded to localhost.  Run five
+instances of ./pocdb-daemon each in a separate directory.  Then execute the
+included ./pocdb-load to throw data at it, or write a script using pocdb.h.
+
+Key Features
+------------
+
+ * Paxos replication
+ * Master-less:  any write can be sent to any server
+ * Partitioned:  keys are not serialized through a single Paxos-backed log
+   unlike in some other key-value stores (HyperDex and Consus excepted).
+ * Servers can go offline if poc client is changed to be aware of offline
+   servers (or to retry requests to online servers)
+ * Fully durable to leveldb
+ 
+What's Missing
+--------------
+
+Quite a bit, but I had a 3 hour limit:
+
+ * Dynamic cluster:  servers are bound to localhost and hard coded
+ * Consistent get:  should retrieve from a quorum and select largest value
+ * Recovery on failure:  if a server fails and comes back, keys will be lazily
+   be repopulated, but that server will have stale data for the interim; Paxos
+   will hide this on write, (and get if that gets completed), but fault
+   tolerance is reduced.
+ * There are a couple of race conditions in the code
+
+Should I use this in production
+-------------------------------
+
+Probably not.  That being said, telling someone not to use a random open
+source project they find on GitHub in production is the most surefire way for
+a single developer to make it into someone else's production stack.
+
+Take a look at Consus (http://consus.io) instead for a more principled system.
+
+Why?
+----
+
+Someone told me it would take six months after I said it was a week's effort
+to prototype.  People also seem hesitant to look at Consus for its use of
+Paxos, so this toy example gives people the ability to dig into how Paxos is
+used without all the niceties in the way.

@@ -1,0 +1,31 @@
+# wildcards
+.deps
+.dirstamp
+.libs
+*.la
+*.lo
+*.o
+# specific files
+/aclocal.m4
+/autom4te.cache
+/bindings/c/testcompile
+/compile
+/config.guess
+/config.h
+/config.h.in
+/config.h.in~
+/config.log
+/config.status
+/config.sub
+/configure
+/depcomp
+/install-sh
+/libtool
+/ltmain.sh
+/m4
+/Makefile
+/Makefile.in
+/missing
+/pocdb-daemon
+/pocdb-load
+/stamp-h1
